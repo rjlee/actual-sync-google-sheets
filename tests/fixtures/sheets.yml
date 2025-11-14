@@ -1,0 +1,10 @@
+sheets:
+  - id: sample
+    spreadsheetId: test
+    tab: Sample
+    source:
+      type: balances
+    transform:
+      columns:
+        - label: Account
+          value: accountName

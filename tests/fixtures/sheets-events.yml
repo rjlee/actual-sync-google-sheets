@@ -1,0 +1,19 @@
+sheets:
+  - id: tx
+    spreadsheetId: sheet
+    tab: Transactions
+    mode: upsert
+    keyColumns:
+      - Transaction ID
+    source:
+      type: transactions
+    transform:
+      columns:
+        - label: Transaction ID
+          value: transactionId
+        - label: Amount
+          value: amount
+    events:
+      entities: transaction
+      types: transaction.created,transaction.updated
+      debounceMs: 2000

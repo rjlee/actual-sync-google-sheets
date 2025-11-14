@@ -1,0 +1,22 @@
+sheets:
+  - id: balances
+    title: "Account Balances"
+    spreadsheetId: ${env:SHEETS_DEFAULT_SPREADSHEET_ID}
+    tab: Balances
+    mode: clear-and-replace
+    syncTarget: default
+    cron: "0 * * * *" # hourly refresh
+    source:
+      type: balances
+      options:
+        includeHidden: false
+    transform:
+      columns:
+        - label: Account
+          value: accountName
+        - label: Balance
+          value: "${balance/100}"
+        - label: Off-budget?
+          value: "${offBudget ? 'Yes' : 'No'}"
+        - label: Last Updated
+          value: "=NOW()"

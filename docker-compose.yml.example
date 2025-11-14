@@ -1,0 +1,14 @@
+version: "3.9"
+services:
+  actual-sync-google-sheets:
+    build: .
+    image: actual-sync-google-sheets:latest
+    restart: unless-stopped
+    env_file:
+      - env/actual-sync-google-sheets.env.example
+    volumes:
+      - ./config:/app/config
+      - ./credentials:/app/credentials
+      - ./data:/app/data
+    ports:
+      - "4020:4020"
