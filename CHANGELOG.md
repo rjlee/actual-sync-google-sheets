@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/rjlee/actual-sync-google-sheets/compare/v1.0.1...v1.0.2) (2025-11-14)
+
+
+### Bug Fixes
+
+* improved error handling ([3c6db02](https://github.com/rjlee/actual-sync-google-sheets/commit/3c6db0294c5b40e182b6986b18d48faef3cc0bae))
+
 ## [1.0.1](https://github.com/rjlee/actual-sync-google-sheets/compare/v1.0.0...v1.0.1) (2025-11-14)
 
 
