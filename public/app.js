@@ -1,5 +1,5 @@
 async function loadStatus() {
-  const res = await fetch("/api/status");
+  const res = await fetch("api/status");
   if (!res.ok) {
     throw new Error(`Status request failed with ${res.status}`);
   }
@@ -83,7 +83,7 @@ function renderGoogleAuth(status) {
 
 async function handleGoogleConnect() {
   try {
-    const res = await fetch("/api/oauth/google/url");
+    const res = await fetch("api/oauth/google/url");
     if (!res.ok) {
       throw new Error("Failed to start Google authorization");
     }
@@ -99,7 +99,7 @@ async function handleGoogleConnect() {
 
 async function handleGoogleDisconnect() {
   try {
-    const res = await fetch("/api/oauth/google/revoke", { method: "POST" });
+    const res = await fetch("api/oauth/google/revoke", { method: "POST" });
     if (!res.ok) {
       throw new Error("Failed to revoke Google authorization");
     }
