@@ -1,5 +1,6 @@
 const { Parser } = require("expr-eval");
 const helpers = require("./helpers");
+const logger = require("../logger");
 
 const parser = new Parser({ allowMemberAccess: true });
 
@@ -14,7 +15,15 @@ function evaluateValue(definition, record) {
     const trimmed = definition.trim();
     if (trimmed.startsWith("${") && trimmed.endsWith("}")) {
       const expression = trimmed.slice(2, -1);
-      return parser.evaluate(expression, { ...helpers, ...record });
+      try {
+        return parser.evaluate(expression, { ...helpers, ...record });
+      } catch (err) {
+        logger.warn(
+          { err, expression, record },
+          "failed to evaluate transform expression",
+        );
+        return "";
+      }
     }
     if (trimmed.startsWith("=")) {
       return trimmed;
