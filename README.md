@@ -28,7 +28,7 @@ See `env/actual-sync-google-sheets.env.example` for core environment variables a
 
 ### Authentication modes
 
-Set `SHEETS_MODE=service-account` (default) to load credentials from `SHEETS_SERVICE_ACCOUNT_JSON`. This works well for headless deployments where you can safely store the service account JSON alongside `config/sheets.yml`.
+Set `SHEETS_MODE=service-account` (default) to load credentials from `SHEETS_SERVICE_ACCOUNT_JSON`. Create a service account in Google Cloud, delegate it access to the target Sheets, and download the JSON key (Service accounts → Keys → “Add key” → JSON). Mount that file into the container (for example under `/app/credentials/service-account.json`) and point `SHEETS_SERVICE_ACCOUNT_JSON` at the mounted path. This mode works well for headless deployments where you can safely store the JSON alongside `config/sheets.yml`.
 
 Set `SHEETS_MODE=oauth` to authorise via Google OAuth:
 
