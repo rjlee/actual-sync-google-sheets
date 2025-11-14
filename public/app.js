@@ -51,12 +51,18 @@ function renderSheets(container, sheets) {
     const item = document.createElement("div");
     item.className = "list-group-item";
     item.innerHTML = `
-      <div class="d-flex w-100 justify-content-between">
-        <h5 class="mb-1">${sheet.title || sheet.id}</h5>
-        <small>${sheet.running ? "Running" : "Idle"}</small>
+      <div class="d-flex w-100 justify-content-between align-items-start">
+        <div>
+          <h5 class="mb-1">${sheet.title || sheet.id}</h5>
+          <p class="mb-1 text-muted">Tab: ${sheet.tab} • Mode: ${sheet.mode} • Rows: ${sheet.rowCount}</p>
+          <small>Last success: ${formatTimestamp(sheet.lastSuccess)} | Last run: ${formatTimestamp(sheet.lastRun)}${sheet.lastError ? ` | Error: ${sheet.lastError.message}` : ""}</small>
+        </div>
+        <div class="ms-3">
+          <button class="btn btn-sm btn-outline-primary sheet-run-btn" data-sheet="${sheet.id}" ${sheet.running ? "disabled" : ""}>
+            ${sheet.running ? "Running…" : "Run now"}
+          </button>
+        </div>
       </div>
-      <p class="mb-1 text-muted">Tab: ${sheet.tab} • Mode: ${sheet.mode} • Rows: ${sheet.rowCount}</p>
-      <small>Last success: ${formatTimestamp(sheet.lastSuccess)} | Last run: ${formatTimestamp(sheet.lastRun)}${sheet.lastError ? ` | Error: ${sheet.lastError.message}` : ""}</small>
     `;
     list.appendChild(item);
   });
@@ -109,6 +115,50 @@ async function handleGoogleDisconnect() {
   }
 }
 
+async function triggerAllSheets(button) {
+  if (button) {
+    button.disabled = true;
+    button.innerText = "Running…";
+  }
+  try {
+    const res = await fetch("api/run", { method: "POST" });
+    if (!res.ok) {
+      throw new Error("Full sync failed");
+    }
+    await bootstrap();
+  } catch (err) {
+    showError(err.message);
+  } finally {
+    if (button) {
+      button.disabled = false;
+      button.innerText = "Run all sheets now";
+    }
+  }
+}
+
+async function triggerSheet(sheetId, button) {
+  if (button) {
+    button.disabled = true;
+    button.innerText = "Running…";
+  }
+  try {
+    const res = await fetch(`api/sheets/${encodeURIComponent(sheetId)}/run`, {
+      method: "POST",
+    });
+    if (!res.ok) {
+      throw new Error(`Sheet ${sheetId} failed (${res.status})`);
+    }
+    await bootstrap();
+  } catch (err) {
+    showError(err.message);
+  } finally {
+    if (button) {
+      button.disabled = false;
+      button.innerText = "Run now";
+    }
+  }
+}
+
 async function bootstrap() {
   try {
     const status = await loadStatus();
@@ -125,12 +175,29 @@ async function bootstrap() {
 function attachEventHandlers() {
   const connectBtn = document.getElementById("googleAuthConnect");
   const disconnectBtn = document.getElementById("googleAuthDisconnect");
+  const runAllBtn = document.getElementById("runAllButton");
   if (connectBtn) {
     connectBtn.addEventListener("click", handleGoogleConnect);
   }
   if (disconnectBtn) {
     disconnectBtn.addEventListener("click", handleGoogleDisconnect);
   }
+  if (runAllBtn) {
+    runAllBtn.addEventListener("click", () => triggerAllSheets(runAllBtn));
+  }
+  document.addEventListener("click", (event) => {
+    const target = event.target;
+    if (
+      target &&
+      target.classList &&
+      target.classList.contains("sheet-run-btn")
+    ) {
+      const sheetId = target.getAttribute("data-sheet");
+      if (sheetId) {
+        triggerSheet(sheetId, target);
+      }
+    }
+  });
 }
 
 document.addEventListener("DOMContentLoaded", () => {
