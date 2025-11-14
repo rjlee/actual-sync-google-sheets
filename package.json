@@ -16,7 +16,7 @@
     "@actual-app/api": "^24.6.0",
     "dotenv": "^17.2.3",
     "expr-eval": "^2.0.2",
-    "googleapis": "^132.0.0",
+    "googleapis": "^166.0.0",
     "express": "^4.19.2",
     "node-cron": "^4.2.1",
     "pino": "^9.0.0",
