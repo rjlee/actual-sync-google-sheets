@@ -32,10 +32,13 @@ Set `SHEETS_MODE=service-account` (default) to load credentials from `SHEETS_SER
 
 Set `SHEETS_MODE=oauth` to authorise via Google OAuth:
 
-1. Populate `SHEETS_OAUTH_CLIENT_ID`, `SHEETS_OAUTH_CLIENT_SECRET`, and `PUBLIC_URL` (must be reachable by your browser, e.g. `https://stack.example.com/sheets`).
-2. Launch the service and open the UI. A Google Auth card appears with “Connect Google”.
-3. Click “Connect Google” to open the OAuth consent screen. After approving, the callback stores refresh/access tokens in `TOKEN_STORE_PATH` and closes the tab.
-4. Use the “Disconnect” button to revoke tokens (they’re removed from disk and revoked at Google).
+1. Create a Google Cloud project + OAuth “Web application” client:
+   - Add an authorized redirect URI pointing at your public URL plus `/oauth/google/callback` (Traefik users: `https://stack.example.com/sheets/oauth/google/callback`).
+   - Copy the Client ID/Secret into `SHEETS_OAUTH_CLIENT_ID` / `SHEETS_OAUTH_CLIENT_SECRET`.
+2. Ensure `PUBLIC_URL` reflects how the UI is reached externally (e.g. `https://stack.example.com/sheets`). The app uses it to build the callback URL.
+3. Set `SHEETS_MODE=oauth`, restart the service, and visit the UI. A Google Auth card appears with “Connect Google”.
+4. Click “Connect Google” to open the consent screen. Approving the prompt stores refresh/access tokens under `TOKEN_STORE_PATH` and closes the tab.
+5. Use “Disconnect” if you need to revoke tokens (they’re removed locally and revoked via the Google API).
 
 ### Upserts and key columns
 
