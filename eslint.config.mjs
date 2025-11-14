@@ -8,6 +8,7 @@ export default [
       "src/**/*.{js,mjs,cjs}",
       "tests/**/*.{js,mjs,cjs}",
       "jest.config.js",
+      "release.config.js",
     ],
     languageOptions: {
       globals: {
