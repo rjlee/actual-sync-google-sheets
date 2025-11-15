@@ -1,3 +1,10 @@
+## [1.0.5](https://github.com/rjlee/actual-sync-google-sheets/compare/v1.0.4...v1.0.5) (2025-11-15)
+
+
+### Bug Fixes
+
+* cron override ([c31f05b](https://github.com/rjlee/actual-sync-google-sheets/commit/c31f05b0d3e0d244ccb20f4b0278f2632cb75d56))
+
 ## [1.0.4](https://github.com/rjlee/actual-sync-google-sheets/compare/v1.0.3...v1.0.4) (2025-11-15)
 
 
