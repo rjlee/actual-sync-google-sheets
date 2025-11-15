@@ -16,7 +16,15 @@ function evaluateValue(definition, record) {
     if (trimmed.startsWith("${") && trimmed.endsWith("}")) {
       const expression = trimmed.slice(2, -1);
       try {
-        return parser.evaluate(expression, { ...helpers, ...record });
+        const context = { ...helpers };
+        for (const [key, value] of Object.entries(record || {})) {
+          if (value === undefined || value === null) {
+            context[key] = 0;
+          } else {
+            context[key] = value;
+          }
+        }
+        return parser.evaluate(expression, context);
       } catch (err) {
         logger.warn(
           { err, expression, record },

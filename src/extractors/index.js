@@ -6,13 +6,33 @@ async function balancesExtractor(context) {
     logger.warn({ err }, "getAccounts failed; returning empty set");
     return [];
   });
-  return accounts.map((account) => ({
-    accountId: account.id,
-    accountName: account.name,
-    type: account.type,
-    balance: account.balance,
-    offBudget: Boolean(account.offbudget),
-  }));
+  return Promise.all(
+    accounts.map(async (account) => {
+      let balanceValue =
+        typeof account.balance === "number" ? account.balance : 0;
+      if (
+        typeof account.balance !== "number" ||
+        Number.isNaN(account.balance)
+      ) {
+        try {
+          balanceValue = await context.api.getAccountBalance(account.id);
+        } catch (error) {
+          logger.warn(
+            { err: error, accountId: account.id },
+            "getAccountBalance failed; falling back to 0",
+          );
+          balanceValue = 0;
+        }
+      }
+      return {
+        accountId: account.id,
+        accountName: account.name,
+        type: account.type,
+        balance: balanceValue,
+        offBudget: Boolean(account.offbudget),
+      };
+    }),
+  );
 }
 
 async function transactionsExtractor(context, options = {}) {

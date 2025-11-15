@@ -63,6 +63,7 @@ Sheets without an `events` block ignore event traffic; cron schedules remain act
 
 - `npm test` – run Jest suites
 - `npm run lint` – run ESLint
-- `npm run sync` – execute a one-off sync using the loaded configuration
+- `npm run sync -- --sheet-all` – execute a one-off sync of every sheet (add `--dry-run` to log rows without updating Google)
+- `npm run sync -- --sheet balances` – run a specific sheet by id (also accepts `--dry-run`)
 
 Docker assets and integration into the wider `actual-auto-stack` will follow the existing conventions of sibling projects.

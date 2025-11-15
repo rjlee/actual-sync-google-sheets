@@ -9,6 +9,8 @@ const { startServer } = require("./server");
 const { createEventSubscriber } = require("./event-subscriber");
 
 async function main() {
+  const args = process.argv.slice(2);
+  const dryRun = args.includes("--dry-run");
   const config = loadConfig();
   const tokenStore = new TokenStore(config.tokens.path);
   await tokenStore.init();
@@ -46,7 +48,24 @@ async function main() {
     try {
       const records = await runExtractor(config, sheet);
       const transformed = transformRecords(sheet.transform, records);
-      if (config.google.enabled) {
+      if (dryRun) {
+        logger.info(
+          { sheetId: sheet.id, rows: transformed.rows.length },
+          "dry-run enabled; skipping upload",
+        );
+        transformed.rows.forEach((row, index) => {
+          const rowData = {};
+          transformed.header.forEach((label, colIndex) => {
+            const key =
+              label && label.length > 0 ? label : `col${colIndex + 1}`;
+            rowData[key] = row[colIndex];
+          });
+          logger.info(
+            { sheetId: sheet.id, row: index + 1, data: rowData },
+            "dry-run row",
+          );
+        });
+      } else if (config.google.enabled) {
         await uploadToSheets(config, tokenStore, {
           spreadsheetId: sheet.spreadsheetId,
           tab: sheet.tab,
@@ -225,12 +244,28 @@ async function main() {
   });
   eventSubscriber.start();
 
-  await startServer(config, runtime, { tokenStore });
+  const sheetArgIndex = process.argv.indexOf("--sheet");
+  if (sheetArgIndex !== -1) {
+    const sheetId = process.argv[sheetArgIndex + 1];
+    if (!sheetId) {
+      throw new Error("--sheet requires a sheet id");
+    }
+    await runtime.triggerSheet(sheetId);
+    process.exit(0);
+  }
+
+  const sheetAllIndex = process.argv.indexOf("--sheet-all");
+  if (sheetAllIndex !== -1) {
+    await runtime.triggerAll();
+    process.exit(0);
+  }
 
   if (config.schedule.once) {
     await runtime.triggerAll();
     process.exit(0);
   }
+
+  await startServer(config, runtime, { tokenStore });
 
   process.on("SIGINT", () => {
     logger.info("received SIGINT, shutting down");
