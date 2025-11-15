@@ -1,3 +1,10 @@
+## [1.0.3](https://github.com/rjlee/actual-sync-google-sheets/compare/v1.0.2...v1.0.3) (2025-11-15)
+
+
+### Bug Fixes
+
+* fixed account balances ([b1a0941](https://github.com/rjlee/actual-sync-google-sheets/commit/b1a0941426cb2c3a110f5668a355c9a717c380c7))
+
 ## [1.0.2](https://github.com/rjlee/actual-sync-google-sheets/compare/v1.0.1...v1.0.2) (2025-11-14)
 
 
