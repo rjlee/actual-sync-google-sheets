@@ -28,8 +28,8 @@ See `env/actual-sync-google-sheets.env.example` for core environment variables a
 
 ```yaml
 tab: Summary
-clearRange: "Summary!A:D"  # wipe only columns the sync controls
-range: "Summary!A1"        # write starting cell
+clearRange: "Summary!A:D" # wipe only columns the sync controls
+range: "Summary!A1" # write starting cell
 ```
 
 Anything outside `clearRange` is preserved on refresh.
