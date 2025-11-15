@@ -1,3 +1,11 @@
+## [1.0.4](https://github.com/rjlee/actual-sync-google-sheets/compare/v1.0.3...v1.0.4) (2025-11-15)
+
+
+### Bug Fixes
+
+* fixed sheets sync ([0d45c42](https://github.com/rjlee/actual-sync-google-sheets/commit/0d45c425b8892d08501a76cd27f25723d4dfd71f))
+* formatting ([ad48e07](https://github.com/rjlee/actual-sync-google-sheets/commit/ad48e077f8aebcba88dd1bac781d4170ebaac167))
+
 ## [1.0.3](https://github.com/rjlee/actual-sync-google-sheets/compare/v1.0.2...v1.0.3) (2025-11-15)
 
 
