@@ -4,47 +4,97 @@ const logger = require("../logger");
 
 const parser = new Parser({ allowMemberAccess: true });
 
-function evaluateValue(definition, record) {
+function buildContext(record, globals = {}) {
+  const context = { ...helpers, ...globals };
+  for (const [key, value] of Object.entries(record || {})) {
+    if (value === undefined || value === null) {
+      context[key] = 0;
+    } else {
+      context[key] = value;
+    }
+  }
+  return context;
+}
+
+function ensureVariables(expression, context) {
+  if (!expression?.variables) {
+    return context;
+  }
+  const enriched = { ...context };
+  for (const variable of expression.variables()) {
+    if (Object.prototype.hasOwnProperty.call(enriched, variable)) continue;
+    enriched[variable] = 0;
+  }
+  return enriched;
+}
+
+function evaluateParserExpression(expression, record, globals) {
+  try {
+    const exprAst =
+      typeof expression === "string" ? parser.parse(expression) : expression;
+    const context = ensureVariables(exprAst, buildContext(record, globals));
+    return exprAst.evaluate(context);
+  } catch (err) {
+    logger.warn(
+      { err, expression, record },
+      "failed to evaluate transform expression",
+    );
+    return null;
+  }
+}
+
+function evaluateValue(definition, record, globals) {
   if (definition === null || definition === undefined) {
     return "";
   }
   if (typeof definition === "function") {
-    return definition(record, helpers);
+    return definition(record, helpers, globals);
   }
   if (typeof definition === "string") {
     const trimmed = definition.trim();
     if (trimmed.startsWith("${") && trimmed.endsWith("}")) {
       const expression = trimmed.slice(2, -1);
-      try {
-        const context = { ...helpers };
-        for (const [key, value] of Object.entries(record || {})) {
-          if (value === undefined || value === null) {
-            context[key] = 0;
-          } else {
-            context[key] = value;
-          }
-        }
-        return parser.evaluate(expression, context);
-      } catch (err) {
-        logger.warn(
-          { err, expression, record },
-          "failed to evaluate transform expression",
-        );
-        return "";
-      }
+      const result = evaluateParserExpression(expression, record, globals);
+      return result === null || result === undefined ? "" : result;
     }
     if (trimmed.startsWith("=")) {
       return trimmed;
     }
-    if (Object.prototype.hasOwnProperty.call(record, definition)) {
-      return record[definition];
+    if (Object.prototype.hasOwnProperty.call(record || {}, trimmed)) {
+      const value = record[trimmed];
+      return value === undefined || value === null ? "" : value;
     }
-    return definition;
+    return trimmed;
   }
   return definition;
 }
 
-function transformRecords(transformConfig, records) {
+function evaluateFilter(filterDef, record, globals) {
+  if (filterDef === null || filterDef === undefined) {
+    return true;
+  }
+  if (typeof filterDef === "function") {
+    try {
+      return Boolean(filterDef(record, helpers, globals));
+    } catch (err) {
+      logger.warn({ err, record }, "transform filter function threw");
+      return false;
+    }
+  }
+  if (typeof filterDef === "string") {
+    const trimmed = filterDef.trim();
+    if (trimmed.length === 0) return true;
+    const expression =
+      trimmed.startsWith("${") && trimmed.endsWith("}")
+        ? trimmed.slice(2, -1)
+        : trimmed;
+    const result = evaluateParserExpression(expression, record, globals);
+    return Boolean(result);
+  }
+  return Boolean(filterDef);
+}
+
+function transformRecords(transformConfig, records, options = {}) {
   const columns = Array.isArray(transformConfig?.columns)
     ? transformConfig.columns
     : [];
@@ -52,9 +102,18 @@ function transformRecords(transformConfig, records) {
     return [];
   }
 
-  const rows = records.map((record) => {
+  const globals = options?.context || {};
+
+  const filtered =
+    typeof transformConfig?.filter === "undefined"
+      ? records
+      : records.filter((record) =>
+          evaluateFilter(transformConfig.filter, record, globals),
+        );
+
+  const rows = filtered.map((record) => {
     const values = columns.map((columnDef) => {
-      const value = evaluateValue(columnDef.value, record);
+      const value = evaluateValue(columnDef.value, record, globals);
       return value === undefined || value === null ? "" : value;
     });
     return values;

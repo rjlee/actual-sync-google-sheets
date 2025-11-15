@@ -163,6 +163,8 @@ function loadSheetConfig(configPath, env) {
       transform,
       keyColumns,
       events,
+      range: sheet.range || null,
+      clearRange: sheet.clearRange || null,
     };
   });
 

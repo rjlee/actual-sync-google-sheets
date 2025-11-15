@@ -3,9 +3,11 @@ sheets:
     title: "Account Balances"
     spreadsheetId: ${env:SHEETS_DEFAULT_SPREADSHEET_ID}
     tab: Balances
+    clearRange: "Balances!A:C"
+    range: "Balances!A1"
     mode: clear-and-replace
     syncTarget: default
-    cron: "0 * * * *" # hourly refresh
+    cron: "0 18 * * *" # daily at 18:00
     source:
       type: balances
       options:
@@ -16,7 +18,6 @@ sheets:
           value: accountName
         - label: Balance
           value: "${balance/100}"
-        - label: Off-budget?
-          value: "${offBudget ? 'Yes' : 'No'}"
         - label: Last Updated
-          value: "=NOW()"
+          value: "${formatDate(syncStartedAt, 'yyyy-MM-dd HH:mm')}"
+      filter: "(not closed) and offBudget"

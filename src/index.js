@@ -46,8 +46,16 @@ async function main() {
     state.lastRun = Date.now();
     state.lastError = null;
     try {
+      const syncStartedAt = new Date();
+      const syncContext = {
+        syncStartedAt,
+        syncStartedAtIso: syncStartedAt.toISOString(),
+        syncTimestamp: syncStartedAt.getTime(),
+      };
       const records = await runExtractor(config, sheet);
-      const transformed = transformRecords(sheet.transform, records);
+      const transformed = transformRecords(sheet.transform, records, {
+        context: syncContext,
+      });
       if (dryRun) {
         logger.info(
           { sheetId: sheet.id, rows: transformed.rows.length },
@@ -69,6 +77,8 @@ async function main() {
         await uploadToSheets(config, tokenStore, {
           spreadsheetId: sheet.spreadsheetId,
           tab: sheet.tab,
+          range: sheet.range,
+          clearRange: sheet.clearRange,
           header: transformed.header,
           rows: transformed.rows,
           mode: sheet.mode,

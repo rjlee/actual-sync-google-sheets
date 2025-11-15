@@ -14,7 +14,7 @@ Sync Actual Budget data to Google Sheets using flexible mappings, scheduled jobs
 
 ```bash
 cp env/actual-sync-google-sheets.env.example env/actual-sync-google-sheets.env
-cp config/sheets.example.yml config/sheets.yml
+cp examples/balances-summary.yml config/sheets.yml
 npm install
 npm run sync -- --once   # Run all configured sheets once
 npm start                # Start scheduler and status server
@@ -24,7 +24,15 @@ The Docker image includes a `bin/healthcheck.sh` script wired up to the containe
 
 ## Configuration
 
-See `env/actual-sync-google-sheets.env.example` for core environment variables and `config/sheets.example.yml` for sheet mapping examples.
+See `env/actual-sync-google-sheets.env.example` for core environment variables and the `examples/` directory for sheet mapping samples. If you only want the automation to touch part of a sheet (so you can keep manual columns), set `clearRange` and `range` per sheet:
+
+```yaml
+tab: Summary
+clearRange: "Summary!A:D"  # wipe only columns the sync controls
+range: "Summary!A1"        # write starting cell
+```
+
+Anything outside `clearRange` is preserved on refresh.
 
 ### Authentication modes
 
@@ -42,7 +50,25 @@ Set `SHEETS_MODE=oauth` to authorise via Google OAuth:
 
 ### Upserts and key columns
 
-Set `mode: upsert` on a sheet to update existing rows rather than clear/append. Provide `keyColumns` (matching your header labels) so the uploader knows how to identify existing rows. The sample `sheets.example.yml` shows an upsert sheet that keys on “Transaction ID”.
+Set `mode: upsert` on a sheet to update existing rows rather than clear/append. Provide `keyColumns` (matching your header labels) so the uploader knows how to identify existing rows. The sample `examples/recent-transactions-upsert.yml` shows an upsert sheet that keys on “Transaction ID”.
+
+### Closed accounts
+
+The balances extractor exposes `offBudget` and `closed` booleans. Add a column such as:
+
+```yaml
+transform:
+  columns:
+    # …
+  filter: "(not closed) and offBudget"
+```
+
+`filter` accepts expression strings using the same syntax as column expressions, so helper functions like `coalesce` are available. Every sheet run also injects `syncStartedAt` (a `Date`), `syncStartedAtIso` (ISO string), and `syncTimestamp` (milliseconds since epoch) into the transform context, so you can stamp the sync time without relying on Google’s volatile formulas:
+
+```yaml
+- label: Last Updated
+  value: "${formatDate(syncStartedAt, 'yyyy-MM-dd HH:mm')}"
+```
 
 ### Event-triggered syncs
 

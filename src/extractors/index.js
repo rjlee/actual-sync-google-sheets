@@ -30,6 +30,7 @@ async function balancesExtractor(context) {
         type: account.type,
         balance: balanceValue,
         offBudget: Boolean(account.offbudget),
+        closed: Boolean(account.closed),
       };
     }),
   );
@@ -40,18 +41,16 @@ async function transactionsExtractor(context, options = {}) {
   const days = Number(options.days || 0);
   const startDate =
     days > 0 ? new Date(now.getTime() - days * 24 * 60 * 60 * 1000) : null;
-  const includeScheduled = Boolean(options.includeScheduled);
-
-  const params = {};
-  if (startDate) {
-    params.startDate = startDate.toISOString().slice(0, 10);
-  }
-  if (!includeScheduled) {
-    params.filterScheduled = true;
-  }
+  const startDateIso = startDate
+    ? startDate.toISOString().slice(0, 10)
+    : undefined;
+  const accountId =
+    typeof options.accountId === "string" && options.accountId.length > 0
+      ? options.accountId
+      : null;
 
   const transactions = await context.api
-    .getTransactions(params)
+    .getTransactions(accountId, startDateIso, undefined)
     .catch((err) => {
       logger.warn({ err }, "getTransactions failed; returning empty set");
       return [];
