@@ -255,7 +255,11 @@ function loadConfig() {
       },
     },
     schedule: {
-      cron: normaliseCron(process.env.SHEETS_CRON || "0 3 * * *"),
+      cron: normaliseCron(
+        process.env.SHEETS_CRON !== undefined
+          ? process.env.SHEETS_CRON
+          : "0 3 * * *",
+      ),
       once: process.argv.includes("--once") || process.argv.includes("--sync"),
     },
     events: {
