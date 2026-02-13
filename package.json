@@ -1,6 +1,6 @@
 {
   "name": "actual-sync-google-sheets",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Sync Actual Budget data into Google Sheets with flexible mapping and schedule/event triggers.",
   "type": "commonjs",
   "main": "src/index.js",

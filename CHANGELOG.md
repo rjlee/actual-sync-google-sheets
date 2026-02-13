@@ -1,3 +1,11 @@
+## [1.0.6](https://github.com/rjlee/actual-sync-google-sheets/compare/v1.0.5...v1.0.6) (2026-02-13)
+
+
+### Bug Fixes
+
+* fix eslint peer dependancies ([328900d](https://github.com/rjlee/actual-sync-google-sheets/commit/328900d573b791edfcdb77466e2c5ea0f8f28eb1))
+* fixing eslint deps ([b66d497](https://github.com/rjlee/actual-sync-google-sheets/commit/b66d49749950a8187404a4601a22f6e8c061129a))
+
 ## [1.0.5](https://github.com/rjlee/actual-sync-google-sheets/compare/v1.0.4...v1.0.5) (2025-11-15)
 
 
