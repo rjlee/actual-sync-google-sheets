@@ -20,7 +20,9 @@ RUN npm pkg delete scripts.prepare || true && \
     npm pkg set dependencies.@actual-app/api=$ACTUAL_API_VERSION && \
     npm install --package-lock-only --no-audit --no-fund; \
   fi && \
-  npm ci --omit=dev --no-audit --no-fund
+  #npm ci --omit=dev --no-audit --no-fund
+  npm ci --omit=dev --no-audit --no-fund --legacy-peer-deps
+
 
 COPY . .
 
