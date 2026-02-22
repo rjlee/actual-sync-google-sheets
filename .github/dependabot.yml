@@ -13,3 +13,14 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 5
+
+    ignore:
+      # Block ESLint major upgrades
+      - dependency-name: "eslint"
+        update-types: ["version-update:semver-major"]
+
+      - dependency-name: "@eslint/js"
+        update-types: ["version-update:semver-major"]
+
+      - dependency-name: "eslint-plugin-import"
+        update-types: ["version-update:semver-major"]
