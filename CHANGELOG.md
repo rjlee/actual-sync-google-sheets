@@ -1,3 +1,10 @@
+## [1.0.8](https://github.com/rjlee/actual-sync-google-sheets/compare/v1.0.7...v1.0.8) (2026-02-22)
+
+
+### Bug Fixes
+
+* stop dependabot breaking eslint deps, until things catchup ([5a488b3](https://github.com/rjlee/actual-sync-google-sheets/commit/5a488b3fef07c59a6243797855e9eb9294fcd1b6))
+
 ## [1.0.7](https://github.com/rjlee/actual-sync-google-sheets/compare/v1.0.6...v1.0.7) (2026-02-22)
 
 
