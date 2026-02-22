@@ -1,3 +1,10 @@
+## [1.0.7](https://github.com/rjlee/actual-sync-google-sheets/compare/v1.0.6...v1.0.7) (2026-02-22)
+
+
+### Bug Fixes
+
+* fix eslint broken dep ([076bb76](https://github.com/rjlee/actual-sync-google-sheets/commit/076bb7695f2c566044d758f13e8ebc5eb09f20da))
+
 ## [1.0.6](https://github.com/rjlee/actual-sync-google-sheets/compare/v1.0.5...v1.0.6) (2026-02-13)
 
 
