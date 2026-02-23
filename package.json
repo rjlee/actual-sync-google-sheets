@@ -27,7 +27,7 @@
     "yaml": "^2.8.2"
   },
   "devDependencies": {
-    "eslint": "9.39.2",
+    "eslint": "10.0.1",
     "@eslint/js": "10.0.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.29.1",
