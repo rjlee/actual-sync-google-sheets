@@ -1,3 +1,10 @@
+## [1.0.9](https://github.com/rjlee/actual-sync-google-sheets/compare/v1.0.8...v1.0.9) (2026-02-24)
+
+
+### Bug Fixes
+
+* fixing eslint dependancy issue ([26855ef](https://github.com/rjlee/actual-sync-google-sheets/commit/26855ef6170c6fe22fbf4c01446408b7fb4161ec))
+
 ## [1.0.8](https://github.com/rjlee/actual-sync-google-sheets/compare/v1.0.7...v1.0.8) (2026-02-22)
 
 
