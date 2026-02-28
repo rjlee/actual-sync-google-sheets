@@ -1,3 +1,12 @@
+## [1.0.10](https://github.com/rjlee/actual-sync-google-sheets/compare/v1.0.9...v1.0.10) (2026-02-28)
+
+
+### Bug Fixes
+
+* fix depndabot eslint exclude ([96f4dcc](https://github.com/rjlee/actual-sync-google-sheets/commit/96f4dcce6f26f509e913baf8112fe30313d158db))
+* fix eslint deps ([98668ca](https://github.com/rjlee/actual-sync-google-sheets/commit/98668ca6f342374521aa18a0ee3691ac2a0edaae))
+* fix linting ([a349d90](https://github.com/rjlee/actual-sync-google-sheets/commit/a349d9066a565294bfc1c07bf33a6bf6d09eddd2))
+
 ## [1.0.9](https://github.com/rjlee/actual-sync-google-sheets/compare/v1.0.8...v1.0.9) (2026-02-24)
 
 
