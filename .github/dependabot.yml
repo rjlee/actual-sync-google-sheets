@@ -8,14 +8,8 @@ updates:
     commit-message:
       prefix: "chore"
       include: "scope"
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-    open-pull-requests-limit: 5
 
     ignore:
-      # Block ESLint major upgrades
       - dependency-name: "eslint"
         update-types: ["version-update:semver-major"]
 
@@ -24,3 +18,10 @@ updates:
 
       - dependency-name: "eslint-plugin-import"
         update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+
