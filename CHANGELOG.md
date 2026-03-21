@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/rjlee/actual-sync-google-sheets/compare/v1.1.0...v1.2.0) (2026-03-21)
+
+
+### Features
+
+* update investment-holdings example to use /api/export/holdings endpoint ([80a5816](https://github.com/rjlee/actual-sync-google-sheets/commit/80a5816df7aa74708a3aa1c1100939a036638bb1))
+
 # [1.1.0](https://github.com/rjlee/actual-sync-google-sheets/compare/v1.0.10...v1.1.0) (2026-03-21)
 
 
