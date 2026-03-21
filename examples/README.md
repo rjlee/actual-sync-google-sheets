@@ -4,5 +4,6 @@ This directory contains ready-to-use sample `config/sheets.yml` fragments. Copy 
 
 - `balances-summary.yml` – Clears + replaces a summary tab with the latest account balances.
 - `recent-transactions-upsert.yml` – Upserts recent transactions keyed by `Transaction ID` so rows update in place when Actual changes.
+- `investment-holdings.yml` – Fetches holdings from `actual-investment-sync` via HTTP and syncs to Google Sheets.
 
 Each example uses `${env:SHEETS_DEFAULT_SPREADSHEET_ID}` placeholders so you can keep the spreadsheet id in `.env`. The Config loader resolves these placeholders automatically.

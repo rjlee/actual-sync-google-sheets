@@ -1,5 +1,6 @@
 const { withBudget } = require("../actual-client");
 const logger = require("../logger");
+const { httpExtractor } = require("./http");
 
 async function balancesExtractor(context) {
   const accounts = await context.api.getAccounts().catch((err) => {
@@ -70,16 +71,28 @@ async function transactionsExtractor(context, options = {}) {
 const EXTRACTORS = {
   balances: balancesExtractor,
   transactions: transactionsExtractor,
+  http: httpExtractor,
 };
 
+const EXTRACTORS_REQUIRES_BUDGET = new Set(["balances", "transactions"]);
+
 async function runExtractor(config, sheet) {
-  const { resolvedSyncTarget, source } = sheet;
+  const { source } = sheet;
+  const extractor = EXTRACTORS[source.type];
+  if (!extractor) {
+    throw new Error(`Unsupported source type: ${source.type}`);
+  }
+
+  const options = source.options || {};
+
+  if (!EXTRACTORS_REQUIRES_BUDGET.has(source.type)) {
+    const data = await extractor(null, options);
+    return Array.isArray(data) ? data : [];
+  }
+
+  const { resolvedSyncTarget } = sheet;
   return withBudget(config, resolvedSyncTarget, async (context) => {
-    const extractor = EXTRACTORS[source.type];
-    if (!extractor) {
-      throw new Error(`Unsupported source type: ${source.type}`);
-    }
-    const data = await extractor(context, source.options || {});
+    const data = await extractor(context, options);
     return Array.isArray(data) ? data : [];
   });
 }

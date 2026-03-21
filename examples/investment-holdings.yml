@@ -1,0 +1,28 @@
+sheets:
+  # Holdings by stock from actual-investment-sync
+  - id: holdings-by-stock
+    title: "Holdings by Stock"
+    spreadsheetId: ${env:SHEETS_DEFAULT_SPREADSHEET_ID}
+    tab: Holdings
+    clearRange: "Holdings!A:E"
+    range: "Holdings!A1"
+    mode: clear-and-replace
+    syncTarget: default
+    cron: "0 19 * * *" # daily at 19:00
+    source:
+      type: http
+      options:
+        url: http://localhost:3000/api/data
+        headers:
+          Authorization: "Bearer ${env:INVESTMENT_API_TOKEN}"
+        extract: "$.stocks"
+    transform:
+      columns:
+        - label: Symbol
+          value: key
+        - label: Name
+          value: name
+        - label: Provider
+          value: provider
+        - label: Last Updated
+          value: "${formatDate(syncStartedAt, 'yyyy-MM-dd HH:mm')}"

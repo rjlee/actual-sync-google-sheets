@@ -85,6 +85,22 @@ events:
 
 Sheets without an `events` block ignore event traffic; cron schedules remain active for all sheets unless `SHEETS_CRON` or per-sheet `cron` are unset.
 
+### HTTP data sources
+
+Set `type: http` to fetch data from any REST API. The HTTP extractor returns JSON and supports JSONPath extraction to select arrays from nested responses.
+
+```yaml
+source:
+  type: http
+  options:
+    url: https://api.example.com/data
+    headers:
+      Authorization: "Bearer ${env:API_TOKEN}"
+    extract: "$.data.items" # JSONPath to array (optional)
+```
+
+Environment variable substitution works in `url` and `headers` values using `${env:VAR_NAME}` syntax. This makes it easy to inject secrets without exposing them in the config file.
+
 ## Development
 
 - `npm test` – run Jest suites
