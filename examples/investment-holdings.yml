@@ -1,10 +1,10 @@
 sheets:
-  # Holdings by stock from actual-investment-sync
-  - id: holdings-by-stock
-    title: "Holdings by Stock"
+  # Holdings aggregated by stock from actual-investment-sync
+  - id: investment-holdings
+    title: "Investment Holdings"
     spreadsheetId: ${env:SHEETS_DEFAULT_SPREADSHEET_ID}
     tab: Holdings
-    clearRange: "Holdings!A:E"
+    clearRange: "Holdings!A:H"
     range: "Holdings!A1"
     mode: clear-and-replace
     syncTarget: default
@@ -12,17 +12,22 @@ sheets:
     source:
       type: http
       options:
-        url: http://localhost:3000/api/data
+        url: http://actual-investment-sync:3000/api/export/holdings
         headers:
           Authorization: "Bearer ${env:INVESTMENT_API_TOKEN}"
-        extract: "$.stocks"
     transform:
       columns:
+        - label: Holding Name
+          value: holdingName
         - label: Symbol
-          value: key
-        - label: Name
-          value: name
+          value: symbol
         - label: Provider
           value: provider
+        - label: Total Quantity
+          value: "${toNumber(totalQuantity)}"
+        - label: Unit Price
+          value: "${toNumber(unitPrice)}"
+        - label: Total Market Value
+          value: "${toNumber(totalMarketValue)}"
         - label: Last Updated
           value: "${formatDate(syncStartedAt, 'yyyy-MM-dd HH:mm')}"
