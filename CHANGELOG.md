@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/rjlee/actual-sync-google-sheets/compare/v1.0.10...v1.1.0) (2026-03-21)
+
+
+### Features
+
+* add HTTP extractor for REST API data sources ([7f0a68f](https://github.com/rjlee/actual-sync-google-sheets/commit/7f0a68f9313b821ad2e67118de61e2d3f32d5e2c))
+
 ## [1.0.10](https://github.com/rjlee/actual-sync-google-sheets/compare/v1.0.9...v1.0.10) (2026-02-28)
 
 
